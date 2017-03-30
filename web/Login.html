@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>TOBA - Titan Online Banking Application</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="styles/main.css" type="text/css"/>
+    </head>
+    <body>
+        <header>TOBA</header>
+        <nav class="menu">
+            <a href="index.html">Home</a>
+            <a href="Login.html">Login</a>
+            <a href="New_customer.html">New Customer</a>
+            <a href="Account_activity.html">Activity</a>
+            <a href="Transaction.html">Transaction</a>
+        </nav>
+        <main>
+            <div>
+                <h1>Customer Login</h1>
+                <p>Please enter your account credentials below to access your account.</p>
+                <form action="Login" method="post">
+                    <div class="field">
+                        <label for="username">Username:</label>
+                        <input type="text" name="username" id="username" required>
+                    </div>
+                    <div class="field">
+                        <label for="password">Password:</label>
+                        <input type="password" name="password" id="password" required>
+                    </div>
+                    <input type="submit" value="Register" id="submit" class="button">
+                </form>
+            </div>
+        </main>
+    </body>
+</html>

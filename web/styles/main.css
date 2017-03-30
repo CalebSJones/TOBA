@@ -1,0 +1,40 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Mar 28, 2017, 12:04:16 AM
+    Author     : Caleb Jones
+*/
+/* Style and Formatting */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.875rem;
+    margin: 0 2rem;
+    line-height: 1rem;
+}
+h1 {
+    font-size: 3rem;
+}
+label {
+    float: left;
+    width: 6rem;
+}
+
+/* Header */
+header {padding: 4rem 0;font-size: 3rem;}
+
+/* Navigation */
+nav a {
+    padding: 0.5rem;
+    background-color: #AFAFAF;
+    cursor: pointer;
+}
+nav a:hover {
+    background-color: #292628;
+    color: #FFF;
+}
+
+/* Form */
+form .field {margin-bottom: 1rem;}
