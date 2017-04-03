@@ -60,8 +60,8 @@ public class NewCustomerServlet extends HttpServlet {
         String url = "";
         
         // get paramters from the request
-        String username = request.getParameter("firstName");
-        String password = request.getParameter("lastName");
+        String firstName = request.getParameter("firstName");
+        String lastName = request.getParameter("lastName");
         String phone = request.getParameter("phone");
         String address = request.getParameter("address");
         String city = request.getParameter("city");
@@ -71,18 +71,16 @@ public class NewCustomerServlet extends HttpServlet {
 
         // Validate the parameters.
         String message;
-        if (username == null || password == null || phone == null || address == null
+        if (firstName == null || lastName == null || phone == null || address == null
             || city == null || state == null || zipcode == null || email == null
-            || username.isEmpty() || password.isEmpty() || phone.isEmpty()
+            || firstName.isEmpty() || lastName.isEmpty() || phone.isEmpty()
             || address.isEmpty() || city.isEmpty() || state.isEmpty()
             || zipcode.isEmpty() || email.isEmpty()) {
             
             message = "Please fill out all the form fields.";
             url = "New_customer.html";
         } else {
-            // Get a relative file name
-            ServletContext sc = getServletContext();
-            String path = sc.getRealPath("/WEB-INF/customers.txt");
+            // Redirect to the success page.
             url = "Success.html";
         }
         response.sendRedirect(url);
@@ -95,7 +93,7 @@ public class NewCustomerServlet extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "This is a servlet that creates new customers as users.";
     }// </editor-fold>
 
 }
