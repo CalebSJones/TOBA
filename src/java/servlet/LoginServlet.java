@@ -10,6 +10,7 @@ import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.WebServlet;
+import customer.User;
 
 /**
  *
@@ -38,6 +39,10 @@ public class LoginServlet extends HttpServlet {
         } else {
             response.sendRedirect("login_failure.jsp");
         }
+        User user = new User(username, password);
+        
+        HttpSession session = request.getSession();
+        session.setAttribute("user", user);
         
     }
 
