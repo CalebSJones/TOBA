@@ -1,20 +1,25 @@
+package servlet;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 
-import java.io.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.io.IOException;
+import java.io.PrintWriter;
+import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
  * @author Caleb Jones
  */
-@WebServlet(name="NewCustomerServlet", urlPatterns={"/NewCustomerServlet"})
-public class NewCustomerServlet extends HttpServlet {
+@WebServlet(urlPatterns = {"/TransactionServlet"})
+public class TransactionServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -27,7 +32,19 @@ public class NewCustomerServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+            /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Servlet TransactionServlet</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>Servlet TransactionServlet at " + request.getContextPath() + "</h1>");
+            out.println("</body>");
+            out.println("</html>");
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -42,7 +59,7 @@ public class NewCustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        doPost(request, response);
+        processRequest(request, response);
     }
 
     /**
@@ -56,34 +73,7 @@ public class NewCustomerServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        String url = "";
-        
-        // get paramters from the request
-        String firstName = request.getParameter("firstName");
-        String lastName = request.getParameter("lastName");
-        String phone = request.getParameter("phone");
-        String address = request.getParameter("address");
-        String city = request.getParameter("city");
-        String state = request.getParameter("state");
-        String zipcode = request.getParameter("zip");
-        String email = request.getParameter("email");
-
-        // Validate the parameters.
-        String message;
-        if (firstName == null || lastName == null || phone == null || address == null
-            || city == null || state == null || zipcode == null || email == null
-            || firstName.isEmpty() || lastName.isEmpty() || phone.isEmpty()
-            || address.isEmpty() || city.isEmpty() || state.isEmpty()
-            || zipcode.isEmpty() || email.isEmpty()) {
-            
-            message = "Please fill out all the form fields.";
-            url = "New_customer.html";
-        } else {
-            // Redirect to the success page.
-            url = "Success.html";
-        }
-        response.sendRedirect(url);
+        processRequest(request, response);
     }
 
     /**
@@ -93,7 +83,7 @@ public class NewCustomerServlet extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "This is a servlet that creates new customers as users.";
+        return "Short description";
     }// </editor-fold>
 
 }

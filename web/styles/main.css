@@ -36,5 +36,12 @@ nav a:hover {
     color: #FFF;
 }
 
+/* Footer */
+footer {background-color: #292628;color: #FFF;margin-top: 1rem;padding: 1rem;}
+
 /* Form */
 form .field {margin-bottom: 1rem;}
+
+/* Table */
+table td {padding: 0.5rem;border: 1px solid;}
+table tr td:first-child {font-weight: bold;}

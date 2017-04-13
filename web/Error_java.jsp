@@ -1,10 +1,12 @@
-I ac<%-- 
+<%-- 
     Document   : Error_java
     Created on : Mar 27, 2017, 11:21:20 PM
     Author     : Caleb Jones
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.io.PrintWriter"%>
+<%@page import="java.io.StringWriter"%>
+<%@page isErrorPage="true" contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -17,7 +19,17 @@ I ac<%--
         <p>To continue, click the Back button.</p>
         
         <h2>Details</h2>
-        <p>Type: {pageContext.exception["class"]}</p>
-        <p>Message: {pageContext.exception.message}</p>
+        <p>Type: ${pageContext.exception["class"]}</p>
+        <p>Message: ${pageContext.exception.message}</p>
+
+StackTrace:
+<%
+	StringWriter stringWriter = new StringWriter();
+	PrintWriter printWriter = new PrintWriter(stringWriter);
+	exception.printStackTrace(printWriter);
+	out.println(stringWriter);
+	printWriter.close();
+	stringWriter.close();
+%>
     </body>
 </html>

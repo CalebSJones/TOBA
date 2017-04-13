@@ -4,17 +4,20 @@
  * and open the template in the editor.
  */
 
+package servlet;
+
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import javax.servlet.annotation.WebServlet;
+
+import customer.User;
+
 
 /**
  *
  * @author Caleb Jones
  */
-@WebServlet(name="LoginServlet", urlPatterns={"/Login"})
-public class LoginServlet extends HttpServlet {
+public class NewCustomerServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -27,16 +30,7 @@ public class LoginServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        
-        if(username.equals("jsmith@toba.com") && password.equals("letmein")) {
-            response.sendRedirect("Account_activity.html");
-        } else {
-            response.sendRedirect("Login_failure.html");
-        }
-        
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -51,7 +45,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        doPost(request, response);
     }
 
     /**
@@ -65,7 +59,44 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        
+        String url;
+        
+        // get paramters from the request
+        String firstName = request.getParameter("firstName");
+        String lastName = request.getParameter("lastName");
+        String phone = request.getParameter("phone");
+        String address = request.getParameter("address");
+        String city = request.getParameter("city");
+        String state = request.getParameter("state");
+        String zip = request.getParameter("zip");
+        String email = request.getParameter("email");
+
+        // Validate the parameters.
+        if (firstName == null || lastName == null || phone == null || address == null
+            || city == null || state == null || zip == null || email == null
+            || firstName.isEmpty() || lastName.isEmpty() || phone.isEmpty()
+            || address.isEmpty() || city.isEmpty() || state.isEmpty()
+            || zip.isEmpty() || email.isEmpty()) {
+            
+            String message = "Please fill out all of the form fields.";
+            url = ("/new_customer.jsp");
+        } else {
+            // Create a new user.
+            String username = lastName + zip;
+            String password = "welcome1";
+            User user = new User(firstName, lastName, phone, address, city, state, zip, email, username, password);
+            
+            // Set session scope.
+            HttpSession session = request.getSession();
+            session.setAttribute("user", user);
+            
+            // Bind Customer object to 
+            
+            // Redirect to the success page.
+            url = ("/Success.jsp");
+        }
+        getServletContext().getRequestDispatcher(url).forward(request, response);
     }
 
     /**
@@ -75,7 +106,7 @@ public class LoginServlet extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "This is a servlet that creates new customers as users.";
     }// </editor-fold>
 
 }

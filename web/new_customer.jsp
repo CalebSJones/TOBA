@@ -1,9 +1,11 @@
+<%-- 
+    Document   : new_customer
+    Created on : Apr 12, 2017, 2:47:00 PM
+    Author     : Caleb Jones
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <html>
     <head>
         <title>TOBA - Titan Online Banking Application</title>
@@ -12,14 +14,7 @@ and open the template in the editor.
         <link rel="stylesheet" href="styles/main.css" type="text/css"/>
     </head>
     <body>
-        <header>TOBA</header>
-        <nav class="menu">
-            <a href="index.html">Home</a>
-            <a href="Login.html">Login</a>
-            <a href="New_customer.html" class="active">New Customer</a>
-            <a href="Account_activity.html">Activity</a>
-            <a href="Transaction.html">Transaction</a>
-        </nav>
+        <jsp:include page="header.html" />
         <main>
             <div>
                 <h1>Customer Registration</h1>
@@ -61,5 +56,6 @@ and open the template in the editor.
                 </form>
             </div>
         </main>
+        <jsp:include page="footer.jsp" />
     </body>
 </html>
