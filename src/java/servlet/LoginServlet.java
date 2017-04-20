@@ -31,18 +31,25 @@ public class LoginServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
+        HttpSession session = request.getSession();
+        
         String username = request.getParameter("username");
         String password = request.getParameter("password");
         
-        if(username.equals("jsmith@toba.com") && password.equals("letmein")) {
-            response.sendRedirect("account_activity.jsp");
+        if(session.getAttribute("user") != null) {
+            User user = (User) session.getAttribute("user");
+            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                response.sendRedirect("account_activity.jsp"); // Successful login from session user.
+            }
+        } else if(username.equals("jsmith@toba.com") && password.equals("letmein")) {
+            response.sendRedirect("account_activity.jsp"); // Successful login with test credentials.
+            
+            // Create new user in Session Scope.
+            User user = new User(username, password);
+            session.setAttribute("user", user);
         } else {
-            response.sendRedirect("login_failure.jsp");
+            response.sendRedirect("login_failure.jsp"); // Login failed.
         }
-        User user = new User(username, password);
-        
-        HttpSession session = request.getSession();
-        session.setAttribute("user", user);
         
     }
 
