@@ -18,6 +18,19 @@
         <main>
             <div>
                 <h1>Transaction Page</h1>
+                <table>
+                    <tr>
+                        <th>Type</th>
+                        <th>Balance</th>
+                    </tr>
+                  <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+                  <c:forEach var="account" items="${accounts}">
+                      <tr>
+                          <td>${account.type}</td>
+                          <td>${account.balance}</td>
+                      </tr>
+                  </c:forEach>
+                </table>
             </div>
         </main>
         <jsp:include page="footer.jsp" />

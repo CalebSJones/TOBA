@@ -19,7 +19,9 @@
         <url-pattern>/NewCustomerServlet</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>servlet.TransactionServlet</servlet-name>
+        <servlet-name>TransactionServlet</servlet-name>
+        <servlet-class>servlet.TransactionServlet</servlet-class>
+        <url-pattern>/transaction</url-pattern>
     </servlet>
     <error-page>
         <error-code>404</error-code>

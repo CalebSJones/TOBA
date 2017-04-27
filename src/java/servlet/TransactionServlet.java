@@ -6,19 +6,23 @@ package servlet;
  * and open the template in the editor.
  */
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.sql.*;
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.util.ArrayList;
+
+import customer.User;
+import customer.Account;
+import data.UserDB;
+import static data.AccountDB.getAccount;
+
 
 /**
  *
  * @author Caleb Jones
  */
-@WebServlet(urlPatterns = {"/TransactionServlet"})
+// @WebServlet(urlPatterns = {"/TransactionServlet"})
 public class TransactionServlet extends HttpServlet {
 
     /**
@@ -32,19 +36,13 @@ public class TransactionServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet TransactionServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet TransactionServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
+
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        
+        ArrayList<Account> accounts = getAccount(user);
+        session.setAttribute("accounts", accounts);
+        
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

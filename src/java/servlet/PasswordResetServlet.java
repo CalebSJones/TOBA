@@ -11,6 +11,7 @@ import javax.servlet.http.*;
 import javax.servlet.annotation.WebServlet;
 
 import customer.User;
+import data.UserDB;
 
 /**
  *
@@ -37,6 +38,9 @@ public class PasswordResetServlet extends HttpServlet {
         User user = (User) session.getAttribute("user");
         user.setPassword(newPassword);
         session.setAttribute("user", user);
+        
+        // Update the user in the database.
+        UserDB.update(user);
         
         getServletContext().getRequestDispatcher(url).forward(request, response);
     }
