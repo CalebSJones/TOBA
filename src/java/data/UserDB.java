@@ -40,7 +40,7 @@ public class UserDB {
            return 0;
         } finally {
             DBUtil.closePreparedStatement(ps);
-            //pool.freeConnection(connection);
+            pool.freeConnection(connection);
         }
     }
     
