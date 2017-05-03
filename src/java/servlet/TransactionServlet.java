@@ -10,12 +10,12 @@ import java.sql.*;
 import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import java.util.ArrayList;
+import java.util.List;
 
 import customer.User;
 import customer.Account;
-import data.UserDB;
-import static data.AccountDB.getAccount;
+import data.AccountDB;
+import customer.Transaction;
 
 
 /**
@@ -40,9 +40,11 @@ public class TransactionServlet extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         
-        ArrayList<Account> accounts = getAccount(user);
-        session.setAttribute("accounts", accounts);
+        List<Account> accounts = AccountDB.getAccounts(user);
+        request.setAttribute("accounts", accounts);
         
+        String url = ("/transaction.jsp");
+        getServletContext().getRequestDispatcher(url).forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -71,7 +73,32 @@ public class TransactionServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        long accountIdFrom = Integer.parseInt(request.getParameter("from"));
+        long accountIdTo = Integer.parseInt(request.getParameter("to"));
+        double amount = Double.parseDouble(request.getParameter("amount"));
+        
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");
+        
+        // Query Accounts.
+        Account accountFrom = AccountDB.getAccount(accountIdFrom);
+        Account accountTo = AccountDB.getAccount(accountIdTo);
+        
+        // Perform transactions.
+        accountFrom.debit(amount);
+        accountTo.credit(amount);
+        Transaction transaction = new Transaction(amount);
+        
+        // Update database.
+        AccountDB.update(accountFrom);
+        AccountDB.update(accountTo);
+        
+        // Update session accounts.
+        List<Account> accounts = AccountDB.getAccounts(user);
+        request.setAttribute("accounts", accounts);
+        
+        String url = ("/transaction.jsp");
+        getServletContext().getRequestDispatcher(url).forward(request, response);
     }
 
     /**

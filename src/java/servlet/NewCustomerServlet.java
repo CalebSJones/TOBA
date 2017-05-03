@@ -12,8 +12,11 @@ import javax.servlet.http.*;
 
 import customer.User;
 import customer.Account;
+import customer.Account.Type;
 import data.UserDB;
 import data.AccountDB;
+import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -89,24 +92,21 @@ public class NewCustomerServlet extends HttpServlet {
             String username = lastName + zip;
             String password = "welcome1";
             User user = new User(firstName, lastName, phone, address, city, state, zip, email, username, password);
-            
+            UserDB.insert(user); // Create user in Database.
             // Create a Savings account with $25.
-            Account savings = new Account(25.00, user);
-            savings.setAccountType("Savings"); // Set to Savings.
+            Account savings = new Account(Type.Savings, 25.00, user);
+            AccountDB.insert(savings);
             
             // Create a Checking account with $0.
-            Account checking = new Account(0, user);
-            checking.setAccountType("Checking"); // Set to Checking.
+            Account checking = new Account(Type.Checking, 0.00, user);
+            AccountDB.insert(checking);
             
             // Set session scope.
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
             
-            // Create user in Database.
-            UserDB.insert(user);
-            AccountDB.insert(savings);
-            AccountDB.insert(checking);
-            
+            List<Account> accounts = Arrays.asList(savings, checking);
+            request.setAttribute("accounts", accounts);
             
             // Redirect to the success page.
             url = ("/Success.jsp");

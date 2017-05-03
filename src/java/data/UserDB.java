@@ -5,7 +5,9 @@
  */
 package data;
 
-import java.sql.*;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+
 import customer.User;
 
 /**
@@ -14,65 +16,33 @@ import customer.User;
  */
 public class UserDB {
     
-    public static int insert(User user) {
-        ConnectionPool pool = ConnectionPool.getInstance();
-        Connection connection = pool.getConnection();
-        PreparedStatement ps = null;
-        
-        String query = "INSERT INTO Users (firstName, lastName, phone, address, city, state, zip, email, username, password) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        
+    public static void insert(User user) {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        EntityTransaction trans = em.getTransaction();
+        trans.begin();
         try {
-            ps = connection.prepareStatement(query);
-            ps.setString(1, user.getFirstName());
-            ps.setString(2, user.getLastName());
-            ps.setString(3, user.getPhone());
-            ps.setString(4, user.getAddress());
-            ps.setString(5, user.getCity());
-            ps.setString(6, user.getState());
-            ps.setString(7, user.getZip());
-            ps.setString(8, user.getEmail());
-            ps.setString(9, user.getUsername());
-            ps.setString(10, user.getPassword());
-            return ps.executeUpdate();
-        } catch (SQLException e) {
-           System.out.println(e);
-           return 0;
+            em.persist(user);
+            trans.commit();
+        } catch (Exception e) {
+            System.out.println(e);
         } finally {
-            DBUtil.closePreparedStatement(ps);
-            pool.freeConnection(connection);
+            em.close();
         }
     }
     
-    public static int update(User user) {
-        ConnectionPool pool = ConnectionPool.getInstance();
-        Connection connection = pool.getConnection();
-        PreparedStatement ps = null;
-        
-        String query = "UPDATE Users SET FirstName = ?, LastName = ?, "
-                + "Phone = ?, Address = ?, City = ?, State = ?, Zip = ?, "
-                + "Username = ?, Password = ? "
-                + "WHERE Email = ?";
+    public static void update(User user) {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        EntityTransaction trans = em.getTransaction();
+        trans.begin();
         try {
-            ps = connection.prepareStatement(query);
-            ps.setString(1, user.getFirstName());
-            ps.setString(2, user.getLastName());
-            ps.setString(3, user.getPhone());
-            ps.setString(4, user.getAddress());
-            ps.setString(5, user.getCity());
-            ps.setString(6, user.getState());
-            ps.setString(7, user.getZip());
-            ps.setString(8, user.getUsername());
-            ps.setString(9, user.getPassword());
-            ps.setString(10, user.getEmail());
-            
-            return ps.executeUpdate();
-        } catch (SQLException e) {
+            em.persist(user);
+            trans.commit();
+        } catch (Exception e) {
             System.out.println(e);
-            return 0;
+            trans.rollback();
         } finally {
-            DBUtil.closePreparedStatement(ps);
-            pool.freeConnection(connection);
+            em.close();
         }
     }
+    
 }

@@ -5,10 +5,11 @@
  */
 package data;
 
-import java.sql.*;
-import java.io.*;
-import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
+import javax.persistence.TypedQuery;
+import java.util.List;
 
 import customer.Account;
 import customer.User;
@@ -19,78 +20,64 @@ import customer.User;
  */
 public class AccountDB {
 
-    public static int insert(Account account) {
-        ConnectionPool pool = ConnectionPool.getInstance();
-        Connection connection = pool.getConnection();
-        PreparedStatement ps = null;
-
-        String query = "INSERT INTO Accounts (user, type, balance) "
-                + "VALUES (?, ?, ?)";
-
+    public static void insert(Account account) {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        EntityTransaction trans = em.getTransaction();
+        trans.begin();
         try {
-            ps = connection.prepareStatement(query);
-            ps.setString(1, account.getUser().toString());
-            ps.setString(2, account.getAccountType().toString());
-            ps.setDouble(3, account.getBalance());
-            return ps.executeUpdate();
-        } catch (SQLException e) {
+            em.persist(account);
+            trans.commit();
+        } catch (Exception e) {
             System.out.println(e);
-            return 0;
+            trans.rollback();
         } finally {
-            DBUtil.closePreparedStatement(ps);
-            pool.freeConnection(connection);
+            em.close();
         }
     }
     
-    public static int update(Account account) {
-        ConnectionPool pool = ConnectionPool.getInstance();
-        Connection connection = pool.getConnection();
-        PreparedStatement ps = null;
-        
-        String query = "UPDATE Accounts SET Balance = ? WHERE User = ?";
-        
+    public static void update(Account account) {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        EntityTransaction trans = em.getTransaction();
+        trans.begin();
         try {
-            ps = connection.prepareStatement(query);
-            ps.setDouble(1, account.getBalance());
-            ps.setString(2, account.getUser().toString());
-            return ps.executeUpdate();
-        } catch (SQLException e) {
+            em.merge(account);
+            trans.commit();
+        } catch (Exception e) {
             System.out.println(e);
-            return 0;
+            trans.rollback();
         } finally {
-            DBUtil.closePreparedStatement(ps);
-            pool.freeConnection(connection);
+            em.close();
+        }
+    }
+    
+    public static Account getAccount(long accountId) {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        String qString = "SELECT a from Account a WHERE a.accountId = :accountId";
+        TypedQuery<Account> q = em.createQuery(qString, Account.class);
+        q.setParameter("accountId", accountId);
+        try {
+            Account account = q.getSingleResult();
+            return account;
+        } catch (NoResultException e) {
+            return null;
+        } finally {
+            em.close();
         }
     }
 
-    public static ArrayList<Account> getAccount(User user) {
-        ConnectionPool pool = ConnectionPool.getInstance();
-        Connection connection = pool.getConnection();
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-
-        String query = "SELECT * FROM Accounts WHERE User = ?";
-
+    public static List<Account> getAccounts(User user) {
+        EntityManager em = DBUtil.getEmFactory().createEntityManager();
+        String qString = "SELECT a from Account a WHERE a.user = :user";
+        TypedQuery<Account> q = em.createQuery(qString, Account.class);
+        q.setParameter("user", user);
+        List<Account> accounts;
         try {
-            ps = connection.prepareStatement(query);
-            ps.setString(1, user.toString());
-            rs = ps.executeQuery();
-            ArrayList<Account> accounts = new ArrayList<Account>();
-            while (rs.next()) {
-                Account account = new Account();
-                account.setUser(user);
-                account.setAccountType(rs.getString("Type"));
-                account.setBalance(rs.getDouble("Balance"));
-                accounts.add(account);
-            }
-            return accounts;
-        } catch (SQLException e) {
-            System.out.println(e);
-            return null;
+            accounts = q.getResultList();
+            if (accounts == null || accounts.isEmpty())
+                accounts = null;
         } finally {
-            DBUtil.closeResultSet(rs);
-            DBUtil.closePreparedStatement(ps);
-            pool.freeConnection(connection);
+            em.close();
         }
+        return accounts;
     }
 }
